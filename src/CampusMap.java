@@ -9,9 +9,19 @@ public class CampusMap {
     int placeCount;
     int roadCount;
 
-    int findOrAdd(String name) throws IOException {
+    int find(String name) {
         for (int i = 0; i < placeCount; i++) {
-            if (places[i].equals(name)) return i;
+            if (places[i].equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    int findOrAdd(String name) throws IOException {
+        int index = find(name);
+        if (index != -1) {
+            return index;
         }
         if (placeCount == places.length) {
             throw new IOException("Map exceeds the limit of 100 places.");
@@ -63,16 +73,21 @@ public class CampusMap {
         }
     }
 
-    public static void main(String[] args) {
-        if (args.length > 1) {
-            System.err.println("Usage: java CampusMap.java [map-file]");
-            System.exit(1);
+    String[] sortedPlaces() {
+        String[] sorted = new String[placeCount];
+        for (int i = 0; i < placeCount; i++) {
+            sorted[i] = places[i];
         }
-        try {
-            load(Path.of(args.length == 0 ? "campus_map.txt" : args[0])).print();
-        } catch (IOException | IllegalArgumentException | SecurityException e) {
-            System.err.println("Cannot load map: " + e.getMessage());
-            System.exit(1);
+        for (int end = placeCount - 1; end > 0; end--) {
+            for (int i = 0; i < end; i++) {
+                if (sorted[i].compareTo(sorted[i + 1]) > 0) {
+                    String temporary = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temporary;
+                }
+            }
         }
+        return sorted;
     }
+
 }
