@@ -11,7 +11,7 @@ public class CampusMap {
 
     int find(String name) {
         for (int i = 0; i < placeCount; i++) {
-            if (places[i].equals(name)) {
+            if (places[i].equalsIgnoreCase(name)) {
                 return i;
             }
         }
@@ -61,36 +61,19 @@ public class CampusMap {
         IO.println("Places: " + placeCount);
         IO.println("Roads: " + roadCount);
         for (int i = 0; i < placeCount; i++) {
-            IO.print(places[i] + " -> ");
-            String separator = "";
-            for (int j = 0; j < placeCount; j++) {
-                if (connected[i][j]) {
-                    IO.print(separator + places[j]);
-                    separator = ", ";
-                }
-            }
-            IO.println();
+            printNeighbours(i);
         }
     }
 
-    String[] sortedPlaces() {
-        String[] sorted = new String[placeCount];
-        for (int i = 0; i < placeCount; i++) {
-            sorted[i] = places[i];
-        }
-        for (int end = placeCount - 1; end > 0; end--) {
-            for (int i = 0; i < end; i++) {
-                if (sorted[i].compareTo(sorted[i + 1]) > 0) {
-                    String temporary = sorted[i];
-                    sorted[i] = sorted[i + 1];
-                    sorted[i + 1] = temporary;
-                }
+    void printNeighbours(int i) {
+        IO.print(places[i] + " -> ");
+        String separator = "";
+        for (int j = 0; j < placeCount; j++) {
+            if (connected[i][j]) {
+                IO.print(separator + places[j]);
+                separator = ", ";
             }
         }
-        return sorted;
-    }
-    public static void main(String[] args) throws IOException {
-        CampusMap map = CampusMap.load(Path.of("campus_map.txt"));
-        map.print();
+        IO.println();
     }
 }
