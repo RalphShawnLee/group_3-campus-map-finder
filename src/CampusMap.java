@@ -89,5 +89,8 @@ public class CampusMap {
         }
         return sorted;
     }
-
+    public static void main(String[] args) throws IOException {
+        CampusMap map = CampusMap.load(Path.of("campus_map.txt"));
+        map.print();
+    }
 }
